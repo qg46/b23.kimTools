@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>嘿壳工具站 · 精选实用工具箱</title>
+    <!-- Google Fonts & Font Awesome 6 (免费CDN) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(145deg, #f5f7fc 0%, #eef2f8 100%);
+            color: #1e293b;
+            line-height: 1.5;
+            padding: 2rem 1.5rem;
+        }
+
+        /* 响应式容器 */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* 头部样式 */
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1e2b3c, #2c4c6e);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.02em;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .hero h1 i {
+            background: none;
+            color: #3b82f6;
+            font-size: 2.3rem;
+        }
+        .hero p {
+            font-size: 1.1rem;
+            color: #475569;
+            margin-top: 12px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .tool-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        .action-btn {
+            background: white;
+            border: 1px solid #cbd5e1;
+            border-radius: 40px;
+            padding: 8px 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #1e293b;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(4px);
+            background: rgba(255,255,255,0.7);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .action-btn i {
+            font-size: 0.9rem;
+        }
+        .action-btn:hover {
+            background: white;
+            border-color: #3b82f6;
+            color: #3b82f6;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transform: translateY(-2px);
+        }
+
+        /* 分类卡片布局 */
+        .categories-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.75rem;
+        }
+
+        /* 单个分类卡片 */
+        .category-card {
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(2px);
+            border-radius: 28px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.02), 0 2px 6px rgba(0,0,0,0.05);
+            transition: all 0.2s;
+            border: 1px solid rgba(255,255,255,0.6);
+            overflow: hidden;
+        }
+
+        /* 分类头部 (可点击折叠) */
+        .category-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.2rem 1.8rem;
+            background: rgba(255,255,255,0.7);
+            cursor: pointer;
+            transition: background 0.2s, padding 0.2s;
+            border-bottom: 1px solid transparent;
+        }
+        .category-header:hover {
+            background: #f8fafd;
+        }
+        .category-title {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #0f172a;
+        }
+        .category-title i:first-child {
+            font-size: 1.8rem;
+            color: #3b82f6;
+            width: 36px;
+            text-align: center;
+        }
+        .category-title span {
+            font-size: 1.2rem;
+            letter-spacing: -0.2px;
+        }
+        .category-badge {
+            background: #e2e8f0;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #334155;
+            margin-left: 12px;
+        }
+        .arrow-icon {
+            font-size: 1.4rem;
+            color: #5b6e8c;
+            transition: transform 0.25s ease;
+        }
+
+        /* 工具网格布局 (响应式) */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.2rem;
+            padding: 1.8rem;
+            transition: all 0.2s;
+        }
+
+        /* 工具卡片样式 */
+        .tool-card {
+            background: white;
+            border-radius: 20px;
+            padding: 1.2rem 1.2rem 1.2rem 1.2rem;
+            transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
+            border: 1px solid #eef2ff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            border-color: #cbdffc;
+            box-shadow: 0 15px 25px -12px rgba(0,0,0,0.1);
+            background: #ffffff;
+        }
+        .tool-icon {
+            font-size: 2rem;
+            color: #3b82f6;
+            margin-bottom: 12px;
+        }
+        .tool-name {
+            font-weight: 700;
+            font-size: 1.15rem;
+            margin-bottom: 6px;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .tool-desc {
+            font-size: 0.8rem;
+            color: #5b6e8c;
+            line-height: 1.4;
+            margin-bottom: 16px;
+            flex: 1;
+        }
+        .tool-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #f1f5f9;
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #1e40af;
+            text-decoration: none;
+            width: fit-content;
+            transition: all 0.2s;
+            margin-top: 8px;
+        }
+        .tool-link i {
+            font-size: 0.7rem;
+            transition: transform 0.2s;
+        }
+        .tool-link:hover {
+            background: #3b82f6;
+            color: white;
+        }
+        .tool-link:hover i {
+            transform: translateX(3px);
+        }
+
+        /* 折叠隐藏样式 */
+        .tools-grid.collapsed {
+            display: none;
+        }
+
+        /* 响应式断点 */
+        @media (max-width: 768px) {
+            body {
+                padding: 1.2rem;
+            }
+            .hero h1 {
+                font-size: 1.9rem;
+            }
+            .category-header {
+                padding: 1rem 1.2rem;
+            }
+            .category-title {
+                font-size: 1.2rem;
+                gap: 8px;
+            }
+            .category-title i:first-child {
+                font-size: 1.5rem;
+            }
+            .tools-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                padding: 1.2rem;
+            }
+            .tool-actions {
+                justify-content: center;
+                margin-bottom: 1.5rem;
+            }
+            .action-btn {
+                padding: 6px 16px;
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .tools-grid {
+                grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            }
+        }
+
+        /* 页脚 */
+        .footer {
+            margin-top: 3.5rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #5c6e8f;
+            border-top: 1px solid rgba(148, 163, 184, 0.3);
+            padding-top: 2rem;
+        }
+
+        /* 辅助动画 */
+        .category-card {
+            transition: all 0.2s;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="hero">
+        <h1>
+            <i class="fas fa-toolbox"></i> 
+            嘿壳工具站
+        </h1>
+        <p>精心分类 · 效率加倍 | 点击分类标题可折叠工具列表，海量实用资源一键直达</p>
+    </div>
+
+    <div class="tool-actions">
+        <button class="action-btn" id="expandAllBtn"><i class="fas fa-plus-circle"></i> 全部展开</button>
+        <button class="action-btn" id="collapseAllBtn"><i class="fas fa-minus-circle"></i> 全部折叠</button>
+    </div>
+
+    <!-- 动态分类列表容器 -->
+    <div id="categoriesRoot" class="categories-container"></div>
+
+    <div class="footer">
+        <i class="far fa-compass"></i> 本页面代码100%由AI生成，人机写的代码。    </div>
+</div>
+
+<script>
+    // ---------- 工具分类数据 (可扩展) ----------
+    // 新增字段 buttonText: 可自定义按钮文字，不填则默认显示“访问工具”
+    const categoriesData = [
+	{
+        "id": "qqbot",
+        "name": "QQ机器人",
+        "icon": "fab fa-qq",
+        "color": "#12B4F0",
+        "tools": [
+            { "name": "机器人开放平台", "desc": "腾讯官方QQ机器人开放平台", "icon": "fab fa-qq", "url": "https://q.qq.com/", "buttonText": "访问官网" },
+            { "name": "龙虾BOT管理", "desc": "简单四步，开启你的智能助手之旅", "icon": "fas fa-robot", "url": "https://q.qq.com/qqbot/openclaw/login.html", "buttonText": "访问官网" },
+            { "name": "BOT官方文档", "desc": "QQ机器人服务端接口官方文档", "icon": "fas fa-book-open", "url": "https://bot.q.qq.com/wiki/develop/api-v2/", "buttonText": "访问文档" },
+	    { "name": "自测报告空白模板", "desc": "删除了所有示例的纯空白表格模板，方便直接填写相关内容", "icon": "fas fa-file-alt", "url": "https://tools.b23.kim/qqbot/files/%E6%9C%BA%E5%99%A8%E4%BA%BA%E8%87%AA%E6%B5%8B%E6%8A%A5%E5%91%8A-2023.xlsx", "buttonText": "下载文件" },
+	    { "name": "隐私协议空白模板", "desc": "删除了所有批注和特殊格式的空白隐私保护协议模板，可直接修改相关区域内容并提交", "icon": "fas fa-file-pdf", "url": "https://tools.b23.kim/qqbot/files/%E7%AC%AC%E4%B8%89%E6%96%B9%E6%9C%BA%E5%99%A8%E4%BA%BA%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4%E6%8C%87%E5%BC%95.docx", "buttonText": "下载文件" },
+            { "name": "按钮生成器", "desc": "机器人消息按钮结构序列化生成器", "icon": "fas fa-hand-pointer", "url": "https://tools.b23.kim/qqbot/button/" },
+            { "name": "机器人查询", "desc": "输入机器人QQ号或APPID查询机器人详细信息", "icon": "fas fa-search", "url": "https://i.elaina.vin/api/bot/" }
+        ]
+    },
+        {
+            id: "dev",
+            name: "开发工具",
+            icon: "fas fa-code",
+            color: "#3b82f6",
+            tools: [
+                { name: "JSON 格式化器", desc: "解析/美化/校验 JSON 数据", icon: "fab fa-js", url: "https://json.cn/" },
+                { name: "正则表达式测试", desc: "在线 Regex 调试，高亮匹配", icon: "fas fa-terminal", url: "https://regex101.com/" },
+                { name: "Git 速查手册", desc: "常用命令与可视化学习", icon: "fab fa-git-alt", url: "https://git-scm.com/docs" },
+                { name: "代码图片生成器", desc: "优雅分享代码片段截图", icon: "fas fa-image", url: "https://carbon.now.sh/" },
+                { name: "图标库搜索", desc: "查找开源图标 (Font Awesome, Material)", icon: "fas fa-icons", url: "https://icones.js.org/" }
+            ]
+        },
+        {
+            id: "design",
+            name: "设计工具",
+            icon: "fas fa-palette",
+            color: "#ec489a",
+            tools: [
+                { name: "Canva 在线设计", desc: "海报/演示文稿/社交媒体", icon: "fab fa-canva", url: "https://www.canva.com/" },
+                { name: "Remove.bg 去背景", desc: "AI 一键移除图片背景", icon: "fas fa-eraser", url: "https://www.remove.bg/" },
+                { name: "Coolors 调色板", desc: "生成配色方案 & 渐变", icon: "fas fa-fill-drip", url: "https://coolors.co/" },
+                { name: "Figma 原型设计", desc: "协作式 UI/UX 设计工具", icon: "fab fa-figma", url: "https://www.figma.com/" },
+                { name: "TinyPNG 压缩", desc: "智能压缩图片体积", icon: "fas fa-compress-alt", url: "https://tinypng.com/" }
+            ]
+        },
+        {
+            id: "text",
+            name: "文本 & 办公",
+            icon: "fas fa-file-alt",
+            color: "#10b981",
+            tools: [
+                { name: "Markdown 编辑器", desc: "实时预览+语法高亮", icon: "fab fa-markdown", url: "https://stackedit.io/" },
+                { name: "文本差异对比", desc: "Diff 在线比较文本", icon: "fas fa-code-branch", url: "https://www.diffchecker.com/" },
+                { name: "字数统计助手", desc: "精确统计中英文/段落", icon: "fas fa-calculator", url: "https://wordcounter.net/" },
+                { name: "Lorem Ipsum 生成", desc: "占位文本生成器", icon: "fas fa-quote-right", url: "https://loremipsum.io/" },
+                { name: "PDF 在线工具", desc: "合并/压缩/转换PDF", icon: "fas fa-file-pdf", url: "https://www.ilovepdf.com/" }
+            ]
+        },
+        {
+            id: "convert",
+            name: "转换 & 编码",
+            icon: "fas fa-exchange-alt",
+            color: "#f59e0b",
+            tools: [
+                { name: "Base64 编码解码", desc: "文本/图片 Base64 互转", icon: "fas fa-lock", url: "https://www.base64decode.org/" },
+                { name: "颜色格式转换", desc: "HEX, RGB, HSL 转换器", icon: "fas fa-eye-dropper", url: "https://www.colorhexa.com/" },
+                { name: "时间戳转换", desc: "Unix时间戳与日期互转", icon: "far fa-clock", url: "https://www.unixtimestamp.com/" },
+                { name: "单位转换器", desc: "长度/重量/面积一站式", icon: "fas fa-ruler-combined", url: "https://www.unitconverters.net/" },
+                { name: "URL 编码/解码", desc: "URL Encode & Decode 工具", icon: "fas fa-link", url: "https://www.urlencoder.org/" }
+            ]
+        }
+    ];
+
+    // 获取容器
+    const rootContainer = document.getElementById('categoriesRoot');
+
+    // 渲染所有分类与工具
+    function renderCategories() {
+        if (!rootContainer) return;
+        rootContainer.innerHTML = '';
+        
+        categoriesData.forEach(category => {
+            // 创建分类卡片
+            const card = document.createElement('div');
+            card.className = 'category-card';
+            card.dataset.categoryId = category.id;
+            
+            // 头部（可折叠区域）
+            const header = document.createElement('div');
+            header.className = 'category-header';
+            header.setAttribute('aria-expanded', 'true');
+            
+            // 标题区域
+            const titleDiv = document.createElement('div');
+            titleDiv.className = 'category-title';
+            const iconSpan = document.createElement('i');
+            iconSpan.className = category.icon;
+            const nameSpan = document.createElement('span');
+            nameSpan.textContent = category.name;
+            const badgeSpan = document.createElement('span');
+            badgeSpan.className = 'category-badge';
+            badgeSpan.textContent = `${category.tools.length}项工具`;
+            
+            titleDiv.appendChild(iconSpan);
+            titleDiv.appendChild(nameSpan);
+            titleDiv.appendChild(badgeSpan);
+            
+            // 箭头图标
+            const arrow = document.createElement('i');
+            arrow.className = 'fas fa-chevron-down arrow-icon';
+            arrow.style.transition = 'transform 0.2s';
+            
+            header.appendChild(titleDiv);
+            header.appendChild(arrow);
+            
+            // 工具网格容器
+            const toolsGrid = document.createElement('div');
+            toolsGrid.className = 'tools-grid';
+            
+            // 生成工具卡片
+            category.tools.forEach(tool => {
+                const toolCard = document.createElement('div');
+                toolCard.className = 'tool-card';
+                
+                // 图标区域
+                const toolIcon = document.createElement('div');
+                toolIcon.className = 'tool-icon';
+                const iconEl = document.createElement('i');
+                iconEl.className = tool.icon || 'fas fa-wrench';
+                toolIcon.appendChild(iconEl);
+                
+                // 名称
+                const toolNameDiv = document.createElement('div');
+                toolNameDiv.className = 'tool-name';
+                toolNameDiv.innerHTML = `<span>${escapeHtml(tool.name)}</span>`;
+                
+                // 描述
+                const toolDesc = document.createElement('div');
+                toolDesc.className = 'tool-desc';
+                toolDesc.textContent = tool.desc;
+                
+                // 链接按钮 —— 支持自定义按钮文字 (新增字段 buttonText)
+                const buttonLabel = tool.buttonText && tool.buttonText.trim() !== '' ? tool.buttonText : '访问工具';
+                const toolLink = document.createElement('a');
+                toolLink.className = 'tool-link';
+                toolLink.href = tool.url;
+                toolLink.target = '_blank';
+                toolLink.rel = 'noopener noreferrer';
+                toolLink.innerHTML = `${escapeHtml(buttonLabel)} <i class="fas fa-arrow-right"></i>`;
+                
+                toolCard.appendChild(toolIcon);
+                toolCard.appendChild(toolNameDiv);
+                toolCard.appendChild(toolDesc);
+                toolCard.appendChild(toolLink);
+                
+                toolsGrid.appendChild(toolCard);
+            });
+            
+            card.appendChild(header);
+            card.appendChild(toolsGrid);
+            rootContainer.appendChild(card);
+        });
+        
+        // 绑定折叠事件
+        attachCollapseEvents();
+    }
+    
+    // 简单的防XSS
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+            return c;
+        });
+    }
+    
+    // 绑定每个分类的折叠/展开交互
+    function attachCollapseEvents() {
+        const allHeaders = document.querySelectorAll('.category-header');
+        allHeaders.forEach(header => {
+            header.removeEventListener('click', headerClickHandler);
+            header.addEventListener('click', headerClickHandler);
+        });
+    }
+    
+    // 统一点击处理器
+    function headerClickHandler(event) {
+        event.stopPropagation();
+        const header = event.currentTarget;
+        const categoryCard = header.closest('.category-card');
+        if (!categoryCard) return;
+        
+        const toolsContainer = categoryCard.querySelector('.tools-grid');
+        const arrowIcon = header.querySelector('.arrow-icon');
+        
+        if (!toolsContainer || !arrowIcon) return;
+        
+        const isCollapsed = toolsContainer.classList.contains('collapsed');
+        if (isCollapsed) {
+            toolsContainer.classList.remove('collapsed');
+            arrowIcon.className = 'fas fa-chevron-down arrow-icon';
+            header.setAttribute('aria-expanded', 'true');
+        } else {
+            toolsContainer.classList.add('collapsed');
+            arrowIcon.className = 'fas fa-chevron-right arrow-icon';
+            header.setAttribute('aria-expanded', 'false');
+        }
+    }
+    
+    // 全部展开功能
+    function expandAllCategories() {
+        const allToolsGrids = document.querySelectorAll('.tools-grid');
+        const allArrows = document.querySelectorAll('.category-header .arrow-icon');
+        const allHeaders = document.querySelectorAll('.category-header');
+        
+        allToolsGrids.forEach(grid => {
+            grid.classList.remove('collapsed');
+        });
+        allArrows.forEach(arrow => {
+            arrow.className = 'fas fa-chevron-down arrow-icon';
+        });
+        allHeaders.forEach(header => {
+            header.setAttribute('aria-expanded', 'true');
+        });
+    }
+    
+    // 全部折叠功能
+    function collapseAllCategories() {
+        const allToolsGrids = document.querySelectorAll('.tools-grid');
+        const allArrows = document.querySelectorAll('.category-header .arrow-icon');
+        const allHeaders = document.querySelectorAll('.category-header');
+        
+        allToolsGrids.forEach(grid => {
+            grid.classList.add('collapsed');
+        });
+        allArrows.forEach(arrow => {
+            arrow.className = 'fas fa-chevron-right arrow-icon';
+        });
+        allHeaders.forEach(header => {
+            header.setAttribute('aria-expanded', 'false');
+        });
+    }
+    
+    // 确保初始渲染后箭头全部向下，且没有折叠状态
+    function ensureAllExpandedAfterRender() {
+        const allGrids = document.querySelectorAll('.tools-grid');
+        allGrids.forEach(grid => {
+            grid.classList.remove('collapsed');
+        });
+        const allArrows = document.querySelectorAll('.category-header .arrow-icon');
+        allArrows.forEach(arrow => {
+            arrow.className = 'fas fa-chevron-down arrow-icon';
+        });
+        const headers = document.querySelectorAll('.category-header');
+        headers.forEach(header => {
+            header.setAttribute('aria-expanded', 'true');
+        });
+    }
+    
+    // 为所有工具卡片的链接增加安全属性
+    function enhanceToolLinks() {
+        document.querySelectorAll('.tool-link').forEach(link => {
+            if (!link.getAttribute('rel')) {
+                link.setAttribute('rel', 'noopener noreferrer');
+            }
+            if (link.getAttribute('target') !== '_blank') {
+                link.setAttribute('target', '_blank');
+            }
+        });
+    }
+    
+    // 监听全部按钮
+    function bindGlobalButtons() {
+        const expandBtn = document.getElementById('expandAllBtn');
+        const collapseBtn = document.getElementById('collapseAllBtn');
+        if (expandBtn) {
+            expandBtn.addEventListener('click', () => {
+                expandAllCategories();
+            });
+        }
+        if (collapseBtn) {
+            collapseBtn.addEventListener('click', () => {
+                collapseAllCategories();
+            });
+        }
+    }
+    
+    // 初始化整个页面
+    function init() {
+        renderCategories();
+        bindGlobalButtons();
+        ensureAllExpandedAfterRender();
+        enhanceToolLinks();
+    }
+    
+    // 启动应用
+    init();
+</script>
+</body>
+</html>
