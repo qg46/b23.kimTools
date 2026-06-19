@@ -148,7 +148,7 @@ const lt = {
     
             }`
 };
-var dt = "static/bullet_screen/public/img/favicon.ico";
+var dt = "./static/bullet_screen/public/img/favicon.ico";
 const ct = {
     id: "webgl"
 }
@@ -261,7 +261,7 @@ const ct = {
             I.position.set(0, 1, 0),
             a.add(I);
             for (let s = 0; s < 10; s++)
-                de.load("/static/bullet_screen/public/img/heart_3.obj", function(n) {
+                de.load("./static/bullet_screen/public/img/heart_3.obj", function(n) {
                     let f = n.children[0];
                     f.geometry.scale(.12, .12, .12);
                     let o = H[Math.floor(Math.random() * H.length)];
@@ -295,7 +295,7 @@ const ct = {
             }
             const X = new re;
             X.setResponseType("arraybuffer"),
-            X.load("/static/bullet_screen/public/img/oppo.zip", s => {
+            X.load("./static/bullet_screen/public/img/oppo.zip", s => {
                 new Xe().loadAsync(s).then(f => {
                     const o = Object.keys(f.files)[0];
                     f.file(o).async("string").then(_ => {
