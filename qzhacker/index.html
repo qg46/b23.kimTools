@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/static/bullet_screen/public/img/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <title>群主是嘿壳</title>
+    <link rel="stylesheet" href="/static/bullet_screen/assets/style.css">
+    <script src="music/pixi.min.js"></script>
+    <script src="music/pixi-sound.js"></script>
+    <script src="/static/bullet_screen/assets/vue.global.prod.js"></script>
+    <script type="module">
+      import bt from '/static/bullet_screen/assets/love.js';
+      Vue.createApp(bt).mount('#webgl');
+    </script>
+    <link rel="stylesheet" href="/static/bullet_screen/assets/index.css">
+  </head>
+  <body>
+      <button id="wyzz" class="floating-button">
+      <a href="invite/tz.php">
+      <span class="vertical-text">我要制作</span>
+      </a>
+      </button>
+      
+      <audio id="musicfx" loop="loop" preload="preload" autoplay=“autoplay“>
+      <source src="https://lf9-music-east.douyinstatic.com/obj/ies-music-hj/7511280757759839036.mp3" type="audio/mpeg">
+      </audio>
+    <div id="webgl" style="width: 100vw;height: 100vh;margin:0;padding:0;background:#fff"></div>
+    <script>
+    const copy = "超级嘿壳"
+    const copys=copy.split('<br/>')
+//music
+    let audioElement;
+    let isAndroid = /Android|Linux/i.test(navigator.userAgent);
+    let isWeChat = /MicroMessenger/i.test(navigator.userAgent);
+    
+    function playAudio() {
+        if (isAndroid) {
+            // 停止HTML audio元素播放，避免重复
+            if (audioElement) {
+                audioElement.pause();
+                audioElement.currentTime = 0;
+            }
+            if (!window.sound_1) {
+                window.sound_1 = PIXI.sound.Sound.from({
+                    url: 'https://lf9-music-east.douyinstatic.com/obj/ies-music-hj/7511280757759839036.mp3',
+                    loop: true
+                });
+            }
+            window.sound_1.play();
+        } else if (isWeChat) {
+            if (window.WeixinJSBridge) {
+                WeixinJSBridge.invoke('getNetworkType', {}, function() {
+                    audioElement.play();
+                });
+            } else {
+                document.addEventListener('WeixinJSBridgeReady', function() {
+                    audioElement.play();
+                });
+            }
+        } else {
+            // 移除重复的DOMContentLoaded监听器，直接播放
+            audioElement.play().catch(e => {
+                document.addEventListener('click', function handler() {
+                    audioElement.play();
+                    document.removeEventListener('click', handler);
+                });
+            });
+        }
+    }
+
+document.addEventListener('DOMContentLoaded', function() {
+    audioElement = document.getElementById('musicfx');
+    
+    if (audioElement) {
+        audioElement.loop = true;
+        playAudio();
+    }
+});
+    </script>
+  </body>
+</html>
