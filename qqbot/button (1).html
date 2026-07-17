@@ -1,0 +1,1664 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes, viewport-fit=cover">
+  <title>QQ机器人 · 按钮生成器</title>
+  <style>
+    :root {
+      --brand: #09F;
+      --brand-hover: #0086e0;
+      --brand-light: rgba(0, 153, 255, 0.10);
+      --success: #15D173;
+      --warning: #FFB300;
+      --error: #F74C30;
+      --text-primary: rgba(0, 0, 0, 0.9);
+      --text-secondary: rgba(60, 60, 67, 0.56);
+      --text-tertiary: rgba(60, 60, 67, 0.3);
+      --bg-page: #eff9ff;
+      --bg-card: #FFFFFF;
+      --bg-subtle: #F0F0F2;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-light: rgba(0, 0, 0, 0.06);
+      --radius-lg: 16px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
+      --shadow-card: 0 4px 12px rgba(174, 184, 191, 0.15);
+      --shadow-card-hover: 0 8px 24px rgba(120, 145, 165, 0.2);
+    }
+    * { box-sizing: border-box; margin: 0; }
+    .ic {
+      width: 1.15em;
+      height: 1.15em;
+      flex: 0 0 auto;
+      vertical-align: -0.2em;
+      pointer-events: none;
+    }
+    body {
+      background: linear-gradient(180deg, #e5f6ff 0%, #eff9ff 240px, #eff9ff 100%) fixed;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', 'Roboto', system-ui, sans-serif;
+      padding: 32px 16px 48px;
+      color: var(--text-primary);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    .container { max-width: 1080px; margin: 0 auto; }
+    h1 {
+      font-size: clamp(1.5rem, 5vw, 2.1rem);
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+    h2 {
+      margin: 0;
+      font-size: clamp(1.1rem, 4vw, 1.3rem);
+      font-weight: 600;
+      color: var(--text-primary);
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    h2::before {
+      content: '';
+      width: 4px;
+      height: 1.1em;
+      border-radius: 3px;
+      background: linear-gradient(180deg, var(--brand), #4db8ff);
+    }
+    .warning {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: linear-gradient(180deg, #e5f6ff, #ffffff);
+      border: 1px solid rgba(0, 153, 255, 0.15);
+      padding: 14px 16px;
+      border-radius: var(--radius-md);
+      margin: 18px 0;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      box-shadow: var(--shadow-card);
+    }
+    .warning-icon {
+      flex: 0 0 auto;
+      width: 20px;
+      height: 20px;
+      color: var(--brand);
+      margin-top: 1px;
+    }
+    .warning strong { color: var(--text-primary); font-weight: 600; }
+    .warning code {
+      background: rgba(0, 153, 255, 0.08);
+      color: var(--brand);
+      padding: 2px 6px;
+      border-radius: 5px;
+      font-size: 0.85em;
+      font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--brand);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 10px 20px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-right: 8px;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+      box-shadow: 0 2px 8px rgba(0, 153, 255, 0.25);
+      transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+    }
+    .btn .ic { width: 1em; height: 1em; vertical-align: middle; }
+    .btn:hover { background: var(--brand-hover); box-shadow: 0 4px 14px rgba(0, 153, 255, 0.35); }
+    .btn:active { transform: translateY(1px); box-shadow: 0 1px 4px rgba(0, 153, 255, 0.25); }
+    .btn-secondary {
+      background: var(--bg-card);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      box-shadow: none;
+    }
+    .btn-secondary:hover { background: var(--bg-subtle); box-shadow: none; }
+    .btn-lg { padding: 12px 28px; font-size: 0.98rem; border-radius: 12px; }
+    .output-section {
+      background: var(--bg-card);
+      border: 2px solid #fff;
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      margin: 20px 0;
+      box-shadow: var(--shadow-card);
+    }
+    .output-toolbar {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+    }
+    .output {
+      background: #1E2430;
+      color: #E6EDF3;
+      border-radius: var(--radius-md);
+      padding: 18px;
+      font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+      white-space: pre-wrap;
+      margin-top: 12px;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      overflow-x: auto;
+    }
+    .button-row-editor {
+      background: var(--bg-card);
+      border: 2px solid #fff;
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-card);
+      transition: box-shadow 0.2s;
+    }
+    .button-row-editor:hover { box-shadow: var(--shadow-card-hover); }
+    .row-header {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .row-header strong {
+      white-space: nowrap;
+      background: linear-gradient(135deg, var(--brand), #4db8ff);
+      padding: 5px 16px;
+      border-radius: 20px;
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: 0 2px 6px rgba(0, 153, 255, 0.25);
+    }
+    .button-item {
+      background: linear-gradient(180deg, #f7fbff, #ffffff);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin: 12px 0;
+      border: 1px solid rgba(0, 153, 255, 0.1);
+    }
+    .small-btn { padding: 6px 14px; font-size: 0.82rem; }
+    .field-group {
+      display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+      margin-right: 14px; margin-bottom: 8px;
+    }
+    .field-group label {
+      font-weight: 600; color: var(--text-primary); min-width: 64px; font-size: 0.85rem;
+    }
+    .field-group input, .field-group select {
+      padding: 7px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      font-size: 0.88rem;
+      color: var(--text-primary);
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .field-group input:focus, .field-group select:focus {
+      outline: none;
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px var(--brand-light);
+    }
+    .hint-note {
+      color: var(--text-secondary); font-size: 0.75rem; margin-left: 4px; white-space: nowrap;
+    }
+    .warn-note {
+      color: #b7791f; font-size: 0.75rem; margin-left: 4px; white-space: nowrap;
+    }
+    .auto-prefix-note { font-size: 0.75rem; color: var(--brand); margin-left: 6px; display: inline-flex; align-items: center; gap: 2px; }
+    .auto-prefix-note .ic { width: 0.9em; height: 0.9em; }
+    .error-text { color: var(--error); font-weight: 500; }
+    .error-text:empty { display: none; }
+    .error-text .ic { width: 1em; height: 1em; vertical-align: -0.15em; margin-right: 4px; }
+    .success-tip {
+      background: rgba(21, 209, 115, 0.12); color: #0e8f4d; padding: 8px 16px; border-radius: 20px;
+      font-weight: 600; display: inline-flex; align-items: center; gap: 5px; margin-left: 16px;
+      opacity: 0; transition: opacity 0.2s;
+      font-size: 0.85rem;
+    }
+    .success-tip.show { opacity: 1; }
+    .success-tip .ic { width: 1.05em; height: 1.05em; }
+    .status-msg {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 5px 12px; border-radius: 16px; font-size: 0.82rem; font-weight: 500;
+    }
+    .status-msg .ic { width: 1.05em; height: 1.05em; }
+    .status-msg.is-success { background: rgba(21, 209, 115, 0.12); color: #0e8f4d; }
+    .status-msg.is-error { background: rgba(247, 76, 48, 0.12); color: var(--error); }
+    .import-result { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+    .import-warn {
+      display: inline-flex; align-items: flex-start; gap: 6px;
+      background: rgba(199, 123, 30, 0.1); color: #c77b1e;
+      padding: 7px 12px; border-radius: 10px; font-size: 0.82rem; line-height: 1.5;
+    }
+    .import-warn .ic { width: 1.05em; height: 1.05em; flex: 0 0 auto; margin-top: 1px; }
+    
+    .add-row-section {
+      margin: 16px 0 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .add-row-section span { color: var(--text-secondary); font-size: 0.85rem; }
+    .row-footer {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border-light);
+      display: flex;
+      justify-content: flex-end;
+    }
+    .preview-section {
+      background: var(--bg-card);
+      border: 2px solid #fff;
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      margin: 18px 0 20px;
+      box-shadow: var(--shadow-card);
+    }
+    .preview-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .preview-container {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      max-width: 460px;
+      min-height: 72px;
+    }
+    .preview-container.small-font .preview-button {
+      height: 19px;
+      border-radius: 4px;
+      font-size: 0.62rem;
+      padding: 0 6px;
+    }
+    .chat-preview {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      max-width: 460px;
+      overflow: hidden;
+    }
+    .chat-header {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border-light);
+      padding: 11px 14px;
+      color: var(--text-primary);
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .chat-body {
+      padding: 12px;
+      min-height: 160px;
+    }
+    .markdown-preview {
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      margin: 0 0 8px;
+      color: var(--text-primary);
+      box-shadow: var(--shadow-card);
+      font-size: 0.9rem;
+    }
+    .preview-container.small-font .markdown-preview {
+      font-size: 0.78rem;
+    }
+    .chat-message {
+      max-width: 82%;
+      width: fit-content;
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      margin-bottom: 10px;
+      color: var(--text-primary);
+      box-shadow: var(--shadow-card);
+      font-size: 0.9rem;
+    }
+    .chat-message.user {
+      margin-left: auto;
+      background: var(--brand);
+      color: #fff;
+    }
+    .chat-message.status {
+      margin-left: auto;
+      margin-right: auto;
+      background: #FFF8E6;
+      color: #7a5a00;
+      font-size: 0.82rem;
+    }
+    .chat-message.success {
+      background: rgba(21, 209, 115, 0.12);
+      color: #0e8f4d;
+    }
+    .chat-spinner {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border: 2px solid rgba(0, 0, 0, 0.1);
+      border-top-color: var(--brand);
+      border-radius: 50%;
+      margin-right: 6px;
+      vertical-align: -2px;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .chat-input-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      background: var(--bg-card);
+      border-top: 1px solid var(--border-light);
+    }
+    .chat-input {
+      flex: 1;
+      min-height: 34px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      color: var(--text-secondary);
+      padding: 8px 12px;
+      background: var(--bg-page);
+      font-size: 0.85rem;
+    }
+    .chat-send-btn {
+      border: none;
+      border-radius: 18px;
+      padding: 8px 14px;
+      background: var(--brand);
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .chat-send-btn:hover { background: var(--brand-hover); }
+    .subscribe-modal-mask {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.35);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+    .subscribe-modal-mask.show { display: flex; }
+    .subscribe-modal {
+      width: min(360px, 100%);
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: 0 18px 48px rgba(15, 23, 42, 0.22);
+      color: var(--text-primary);
+    }
+    .subscribe-modal h3 {
+      margin: 0 0 8px;
+      color: var(--text-primary);
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+    .subscribe-modal p {
+      margin: 0 0 16px;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+    .subscribe-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    .preview-empty {
+      color: var(--text-secondary);
+      text-align: center;
+      padding: 16px;
+      font-size: 0.9rem;
+    }
+    .preview-row {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+    .preview-row:last-child { margin-bottom: 0; }
+    .preview-button {
+      flex: 1 1 0;
+      min-width: 0;
+      height: 38px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--bg-card);
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 10px;
+      font-size: 0.9rem;
+      line-height: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      cursor: pointer;
+      transition: opacity 0.15s, filter 0.15s, transform 0.1s;
+      position: relative;
+    }
+    .preview-button:hover { transform: translateY(-1px); }
+    .preview-button.style-0 {
+      border-color: var(--border);
+      color: var(--text-primary);
+      background: var(--bg-card);
+    }
+    .preview-button.style-1 {
+      border-color: rgba(0, 153, 255, 0.4);
+      color: var(--brand);
+      background: var(--bg-card);
+    }
+    .preview-button.style-2 {
+      border-color: var(--border);
+      color: var(--text-primary);
+      background: var(--bg-card);
+      gap: 4px;
+    }
+    .preview-ai-icon {
+      width: 16px;
+      height: 16px;
+      flex: 0 0 auto;
+    }
+    .preview-container.small-font .preview-ai-icon {
+      width: 10px;
+      height: 10px;
+    }
+    .preview-button.style-3 {
+      border-color: rgba(247, 76, 48, 0.4);
+      color: var(--error);
+      background: var(--bg-card);
+    }
+    .preview-button.style-4 {
+      border-color: var(--brand);
+      color: #fff;
+      background: var(--brand);
+    }
+    .preview-button.visited {
+      opacity: 0.85;
+    }
+    .preview-button.disabled {
+      opacity: 0.45;
+      filter: grayscale(1);
+      pointer-events: none;
+    }
+    .required-hint { color: var(--error); margin-left: 4px; }
+    .future-note {
+      background: #FFF8E6;
+      color: #7a5a00;
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-left: 6px;
+    }
+    .panel {
+      margin: 12px 0 18px;
+      background: var(--bg-card);
+      border: 2px solid #fff;
+      border-radius: var(--radius-lg);
+      padding: 16px 18px;
+      box-shadow: var(--shadow-card);
+      transition: box-shadow 0.2s;
+    }
+    .panel:hover { box-shadow: var(--shadow-card-hover); }
+    .panel > summary {
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      color: var(--text-primary);
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .panel > summary::-webkit-details-marker { display: none; }
+    .panel > summary::after {
+      content: '›';
+      margin-left: auto;
+      display: inline-block;
+      transition: transform 0.2s;
+      color: var(--text-tertiary);
+      font-size: 1.3em;
+      transform: rotate(90deg);
+    }
+    .panel[open] > summary::after { transform: rotate(-90deg); }
+    .panel p { color: var(--text-secondary); }
+    .panel code {
+      background: rgba(0, 153, 255, 0.08);
+      color: var(--brand);
+      padding: 1px 5px;
+      border-radius: 5px;
+      font-size: 0.85em;
+      font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+    }
+    .panel label {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    .panel select, .panel input {
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      font-size: 0.88rem;
+      color: var(--text-primary);
+      font-weight: 400;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .panel select:focus, .panel input:focus {
+      outline: none;
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px var(--brand-light);
+    }
+    .header-bar {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin: 24px 0 14px;
+    }
+    .app-header {
+      background: linear-gradient(135deg, #09F 0%, #4db8ff 100%);
+      border-radius: 20px;
+      padding: 24px 26px;
+      margin-bottom: 20px;
+      color: #fff;
+      box-shadow: 0 8px 24px rgba(0, 153, 255, 0.28);
+      position: relative;
+      overflow: hidden;
+    }
+    .app-header::after {
+      content: '';
+      position: absolute;
+      right: -40px;
+      top: -60px;
+      width: 200px;
+      height: 200px;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 50%;
+    }
+    .app-header h1 {
+      color: #fff;
+      margin-bottom: 6px;
+      position: relative;
+    }
+    .app-header .subtitle {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.9rem;
+      position: relative;
+    }
+    .header-bar label { font-size: 0.85rem; color: var(--text-secondary); font-weight: 500; }
+    .toolbar-select {
+      padding: 7px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      font-size: 0.88rem;
+      color: var(--text-primary);
+    }
+    .import-textarea {
+      width: 100%;
+      min-height: 150px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      padding: 12px;
+      font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+      font-size: 0.85rem;
+      box-sizing: border-box;
+      color: var(--text-primary);
+      background: var(--bg-page);
+      resize: vertical;
+    }
+    .import-textarea:focus {
+      outline: none;
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px var(--brand-light);
+    }
+    .note {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      margin: 16px 0 4px;
+    }
+    footer {
+      color: var(--text-tertiary);
+      font-size: 0.8rem;
+      margin-top: 8px;
+      padding-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    @media (max-width: 640px) {
+      body { padding: 12px 8px; }
+      .field-group { width: 100%; }
+      .field-group label { min-width: 80px; }
+      .btn { padding: 8px 14px; font-size: 0.85rem; }
+      .hint-note { white-space: normal; }
+      .preview-container { max-width: none; }
+      .chat-preview { max-width: none; }
+      .preview-button { font-size: 0.82rem; padding: 0 6px; }
+    }
+  </style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute; overflow:hidden;" aria-hidden="true" focusable="false">
+  <symbol id="ic-robot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="4" y="8" width="16" height="12" rx="3"></rect>
+    <path d="M12 8V4M12 4h-1.5M12 4h1.5"></path>
+    <circle cx="9" cy="14" r="1.2" fill="currentColor" stroke="none"></circle>
+    <circle cx="15" cy="14" r="1.2" fill="currentColor" stroke="none"></circle>
+    <path d="M2.5 12v3M21.5 12v3"></path>
+  </symbol>
+  <symbol id="ic-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="9"></circle>
+    <path d="M12 11v5M12 8h.01"></path>
+  </symbol>
+  <symbol id="ic-import" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3v11m0 0l-4-4m4 4l4-4"></path>
+    <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"></path>
+  </symbol>
+  <symbol id="ic-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="3"></circle>
+    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+  </symbol>
+  <symbol id="ic-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"></path>
+    <circle cx="12" cy="12" r="3"></circle>
+  </symbol>
+  <symbol id="ic-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 5v14M5 12h14"></path>
+  </symbol>
+  <symbol id="ic-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+    <path d="M10 11v6M14 11v6"></path>
+  </symbol>
+  <symbol id="ic-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="9" y="9" width="12" height="12" rx="2"></rect>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+  </symbol>
+  <symbol id="ic-sparkle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3l1.9 4.6L18.5 9.5l-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9L12 3z"></path>
+    <path d="M19 15l.8 1.9 1.9.8-1.9.8L19 20.4l-.8-1.9-1.9-.8 1.9-.8L19 15z"></path>
+  </symbol>
+  <symbol id="ic-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 4v10m0 0l-3.5-3.5M12 14l3.5-3.5"></path>
+    <path d="M5 18h14"></path>
+  </symbol>
+  <symbol id="ic-font" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M5 18l4.5-12h1L15 18M6.6 14h6.8"></path>
+    <path d="M15 18l2.7-7h.6L21 18M16.1 15.5h4.3"></path>
+  </symbol>
+  <symbol id="ic-bolt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M13 2L4.5 13.5H11l-1 8.5L19.5 10H13l0-8z"></path>
+  </symbol>
+  <symbol id="ic-warn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"></path>
+    <path d="M12 9v4M12 17h.01"></path>
+  </symbol>
+  <symbol id="ic-leaf" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"></path>
+    <path d="M2 21c0-3 1.85-5.36 5.08-6"></path>
+  </symbol>
+  <symbol id="ic-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="9"></circle>
+    <path d="M8 12.5l2.5 2.5L16 9.5"></path>
+  </symbol>
+  <symbol id="ic-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="9"></circle>
+    <path d="M15 9l-6 6M9 9l6 6"></path>
+  </symbol>
+  <symbol id="message_ai_24_icon" viewBox="0 0 24 24">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M5.82532 18.3693C3.44835 16.8851 1.85693 14.1719 1.85693 11.0707C1.85693 6.37686 5.50261 2.57178 9.99978 2.57178H13.4283C17.9255 2.57178 21.5712 6.37686 21.5712 11.0707C21.5712 15.3281 18.5718 18.8544 14.6582 19.4733L14.6548 19.4754L14.6538 19.4794C14.6559 19.4918 14.6595 19.5072 14.6642 19.5255C14.7176 19.7286 14.9295 20.2817 15.1773 20.9025C15.2021 20.9646 15.2203 21.0267 15.2324 21.0882L15.2368 21.1121C15.252 21.2005 15.2548 21.2876 15.2466 21.372C15.1844 22.0119 14.4924 22.4951 13.831 22.185L6.78031 18.8794L5.82532 18.3693ZM12.9598 19.7431L12.9617 19.7546C12.9712 19.8128 12.9118 19.8607 12.8584 19.8356L7.49573 17.3215L6.73321 16.9151C4.85648 15.7433 3.57116 13.5789 3.57116 11.0706C3.57116 7.2537 6.51773 4.28601 9.99973 4.28601H13.4283C16.9103 4.28601 19.8568 7.2537 19.8568 11.0706C19.8568 14.5267 17.4298 17.3002 14.3886 17.7802C13.4602 17.9268 12.8115 18.7987 12.9598 19.7431Z" fill="url(#message_ai_paint0)"></path>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M12.9439 12.3955C12.8887 12.4166 12.845 12.4601 12.8237 12.5152L12.0385 14.5461C11.9697 14.7239 11.7181 14.7239 11.6493 14.5461L10.8641 12.5152C10.8428 12.4601 10.7991 12.4166 10.7439 12.3955L8.70358 11.6168C8.52459 11.5485 8.52459 11.2953 8.70358 11.227L10.7439 10.4482C10.7991 10.4272 10.8428 10.3837 10.8641 10.3286L11.6493 8.2977C11.7181 8.11984 11.9697 8.11984 12.0385 8.2977L12.8237 10.3286C12.845 10.3837 12.8887 10.4272 12.9439 10.4482L14.9842 11.227C15.1632 11.2953 15.1632 11.5485 14.9842 11.6168L12.9439 12.3955Z" fill="url(#message_ai_paint1)"></path>
+    <defs>
+      <radialGradient id="message_ai_paint0" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(33.3938 28.0782) rotate(-144.727) scale(44.1686 48.1906)">
+        <stop stop-color="#9AFF35"></stop>
+        <stop offset="0.326433" stop-color="#FF9254"></stop>
+        <stop offset="0.564139" stop-color="#CB69FF"></stop>
+        <stop offset="0.9021" stop-color="#6F57FF"></stop>
+      </radialGradient>
+      <radialGradient id="message_ai_paint1" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(33.3937 28.0784) rotate(-144.727) scale(44.1686 48.1906)">
+        <stop stop-color="#9AFF35"></stop>
+        <stop offset="0.326433" stop-color="#FF9254"></stop>
+        <stop offset="0.564139" stop-color="#CB69FF"></stop>
+        <stop offset="0.9021" stop-color="#6F57FF"></stop>
+      </radialGradient>
+    </defs>
+  </symbol>
+</svg>
+<div class="container">
+  <header class="app-header">
+    <h1><svg class="ic"><use href="#ic-robot"></use></svg> 按钮生成器</h1>
+    <div class="subtitle">QQ 机器人 Markdown 键盘按钮可视化编辑 · 生成 / 导入 / 预览</div>
+  </header>
+  <div class="warning">
+    <svg class="ic warning-icon"><use href="#ic-info"></use></svg>
+    <div><strong>必须携带 Markdown！</strong> 平台禁止单独发送键盘。<br>
+    <code>this.e.reply([segment.markdown('群主是人机'), keyboard])</code></div>
+  </div>
+
+  <!-- 标题 + 格式/小字体/预填 -->
+  <div class="header-bar">
+    <h2>动态多行按钮编辑</h2>
+    <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-left:auto;">
+      <label>输出格式:
+        <select id="outputFormat" class="toolbar-select">
+          <option value="segment">框架代码 (segment.raw)</option>
+          <option value="json">通用 JSON</option>
+        </select>
+      </label>
+      <label><svg class="ic"><use href="#ic-font"></use></svg> 全局小字体:
+        <select id="globalSmallFont" class="toolbar-select">
+          <option value="no" selected>默认大小</option>
+          <option value="small">small (小字体)</option>
+        </select>
+      </label>
+      <label style="display:flex; align-items:center; gap:4px;">
+        <input type="checkbox" id="prefillSample" checked> 预填示例
+      </label>
+    </div>
+  </div>
+
+  <!-- 通用 JSON 导入 -->
+  <details class="panel" id="importSection">
+    <summary><svg class="ic"><use href="#ic-import"></use></svg> 通用 JSON 导入 (转为按钮并可继续编辑)</summary>
+    <p style="font-size:0.85rem; margin:12px 0;">粘贴按钮 JSON，支持 <code>{"rows":[...]}</code>、<code>{"content":{"rows":[...]}}</code>、<code>{"type":"keyboard","content":{"rows":[...]}}</code>，也支持客户端返回的数字字段 protobuf 结构(含最外层 <code>"53"</code> 包裹)。导入后会转成可视化按钮继续编辑。</p>
+    <textarea id="importInput" class="import-textarea" placeholder='{"rows":[{"buttons":[{"id":"btn_1","render_data":{"label":"日签","visited_label":"已签到","style":1},"action":{"type":2,"permission":{"type":2},"data":"#签到","unsupport_tips":"请升级QQ版本"}}]}]}'></textarea>
+    <div style="margin-top:10px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+      <button class="btn" id="importBtn"><svg class="ic"><use href="#ic-import"></use></svg> 导入并预览</button>
+      <button class="btn btn-secondary" id="importCurrentBtn"><svg class="ic"><use href="#ic-download"></use></svg> 载入当前按钮JSON</button>
+      <span id="importMsg" style="font-size:0.85rem;"></span>
+    </div>
+  </details>
+
+  <!-- 动态按钮编辑区域 -->
+  <div id="rowsContainer"></div>
+
+  <!-- 添加一行按钮 -->
+  <div class="add-row-section">
+    <button class="btn" id="addRowBtn"><svg class="ic"><use href="#ic-plus"></use></svg> 添加一行</button>
+    <span>按钮最多五行</span>
+  </div>
+
+  <!-- 全局默认属性 -->
+  <details class="panel">
+    <summary><svg class="ic"><use href="#ic-settings"></use></svg> 全局默认属性 (新按钮预填)</summary>
+    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(180px,1fr)); gap:12px; margin-top:16px;">
+      <label>样式: <select id="defaultStyle">
+        <option value="0">0 灰框</option><option value="1" selected>1 蓝框</option><option value="2">2 智能体(推荐回复)</option><option value="3">3 红框</option><option value="4">4 蓝底白字</option>
+      </select></label>
+      <label>类型: <select id="defaultType">
+        <option value="0">0 链接</option><option value="1">1 回调</option><option value="2" selected>2 指令</option><option value="3">3 native</option><option value="4">4 订阅</option><option value="5">5 自定义</option>
+      </select></label>
+      <label>权限: <select id="defaultPerm">
+        <option value="0">0 指定用户</option><option value="1">1 管理员</option><option value="2" selected>2 所有人</option><option value="3">3 身份组</option>
+      </select></label>
+      <label>enter: <select id="defaultEnter"><option value="false">否</option><option value="true">是</option></select></label>
+      <label>reply: <select id="defaultReply"><option value="false">否</option><option value="true">是</option></select></label>
+      <label>不支持提示: <input id="defaultUnsupport" placeholder="unsupport_tips" value="请升级QQ版本"></label>
+      <label>点击限制: <input id="defaultClickLimit" type="number" placeholder="可选"></label>
+      <label>anchor: <select id="defaultAnchor"><option value="0">0 无</option><option value="1">1 选图器</option></select></label>
+    </div>
+  </details>
+
+  <section class="preview-section">
+    <div class="preview-header">
+      <h2>按钮预览</h2>
+      <button class="btn btn-secondary small-btn" id="resetPreviewBtn">重置预览状态</button>
+    </div>
+    <div class="chat-preview">
+      <div class="chat-header">QQ 聊天预览</div>
+      <div class="chat-body" id="chatPreviewBody">
+      </div>
+      <div class="preview-container" id="buttonPreview">
+        <div class="markdown-preview">操作提示</div>
+        <div class="preview-empty">暂无按钮</div>
+      </div>
+      <div class="chat-input-bar">
+        <div class="chat-input" id="chatInputPreview">点击按钮后，这里会模拟输入或发送结果</div>
+        <button type="button" class="chat-send-btn" id="chatSendPreviewBtn">发送</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="subscribe-modal-mask" id="subscribeModal">
+    <div class="subscribe-modal">
+      <h3>订阅提醒</h3>
+      <p id="subscribeModalText">是否订阅该按钮消息？</p>
+      <div class="subscribe-actions">
+        <button class="btn btn-secondary small-btn" id="cancelSubscribeBtn">取消</button>
+        <button class="btn small-btn" id="confirmSubscribeBtn">订阅</button>
+      </div>
+    </div>
+  </div>
+
+  <section class="output-section">
+    <div class="output-toolbar">
+      <button class="btn btn-lg" id="genBtn"><svg class="ic"><use href="#ic-sparkle"></use></svg> 生成代码</button>
+      <button class="btn btn-secondary" id="copyBtn"><svg class="ic"><use href="#ic-copy"></use></svg> 复制</button>
+      <span id="successMessage" class="success-tip"><svg class="ic"><use href="#ic-check"></use></svg><span>生成成功！可点击复制</span></span>
+    </div>
+    <div id="errorMsg" class="error-text" style="min-height:24px;"></div>
+    <div class="output" id="outputCode">// 点击生成按钮显示代码</div>
+  </section>
+  <p class="note">群主一定是机器人，嘿群主壳，人群主机</p>
+  <footer><svg class="ic"><use href="#ic-leaf"></use></svg> QQBot-Plugin</footer>
+</div>
+
+<script>
+  (function(){
+    let rows = [];
+    const prefillCheck = document.getElementById('prefillSample');
+    const successMsg = document.getElementById('successMessage');
+    const previewContainer = document.getElementById('buttonPreview');
+    const chatBody = document.getElementById('chatPreviewBody');
+    const chatInputPreview = document.getElementById('chatInputPreview');
+    const subscribeModal = document.getElementById('subscribeModal');
+    const subscribeModalText = document.getElementById('subscribeModalText');
+    let previewState = { clickedButtons: {}, selectedGroups: {} };
+    let pendingSubscribeButton = null;
+    let successTimer = null;
+
+    function icon(id) {
+      return '<svg class="ic"><use href="#' + id + '"></use></svg>';
+    }
+    // 在目标元素渲染带图标的状态徽章
+    function setStatus(el, type, text) {
+      if (!text) { el.className = el.id === 'importMsg' ? '' : 'error-text'; el.innerHTML = ''; return; }
+      const ic = type === 'success' ? 'ic-check' : 'ic-x';
+      el.className = 'status-msg is-' + type;
+      el.innerHTML = icon(ic) + '<span>' + text + '</span>';
+    }
+    function setError(text) {
+      const el = document.getElementById('errorMsg');
+      if (!text) { el.innerHTML = ''; return; }
+      el.innerHTML = icon('ic-x') + text;
+    }
+    function showSuccessTip(message = '生成成功！可点击复制') {
+      if (successTimer) clearTimeout(successTimer);
+      successMsg.innerHTML = icon('ic-check') + '<span>' + message + '</span>';
+      successMsg.classList.add('show');
+      successTimer = setTimeout(() => successMsg.classList.remove('show'), 2500);
+    }
+
+    // 生成订阅默认模板ID: appid_时间戳
+    function generateDefaultTemplateId() {
+      return 'appid_' + Date.now();
+    }
+
+    function createDefaultButton() {
+      const useSample = prefillCheck.checked;
+      const defType = document.getElementById('defaultType').value;
+      let defaultData = '#签到';
+      if (defType === '0') defaultData = 'https://www.qq.com';
+      else if (defType === '3') defaultData = 'mqqapi://';
+      return {
+        id: 'btn_' + Date.now() + '_' + Math.random().toString(36).substr(2,6),
+        label: useSample ? '日签' : '',
+        visited_label: useSample ? '已签到' : '',
+        style: document.getElementById('defaultStyle').value,
+        actionType: defType,
+        data: useSample ? defaultData : '',
+        permissionType: document.getElementById('defaultPerm').value,
+        specifyIds: '',
+        useModal: false,
+        modalContent: '确认执行？',
+        modalConfirm: '✔️确认',
+        modalCancel: '❌取消',
+        templateId: generateDefaultTemplateId(),   // 订阅模板ID
+        templateIdType: 'custom_template_id',       // 订阅模板ID类型: custom_template_id | template_id
+        unsupportTips: document.getElementById('defaultUnsupport').value,
+        enter: document.getElementById('defaultEnter').value === 'true',
+        reply: document.getElementById('defaultReply').value === 'true',
+        atBotList: false,
+        clickLimit: document.getElementById('defaultClickLimit').value,
+        groupId: '',
+        anchor: document.getElementById('defaultAnchor').value,
+      };
+    }
+
+    function initDefaultRows() {
+      rows = [{ buttons: [createDefaultButton()] }];
+      renderRows();
+    }
+
+    // 将通用按钮 JSON 解析为编辑器内部按钮模型
+    function actionButtonToModel(btn) {
+      const model = createDefaultButton();
+      btn = btn || {};
+      const render = btn.render_data || {};
+      const action = btn.action || {};
+      const perm = action.permission || {};
+
+      model.id = btn.id || model.id;
+      model.label = render.label != null ? String(render.label) : '';
+      model.visited_label = render.visited_label != null ? String(render.visited_label) : '';
+      model.style = render.style != null ? String(render.style) : '0';
+
+      model.actionType = action.type != null ? String(action.type) : '2';
+      model.data = action.data != null ? String(action.data) : '';
+      model.permissionType = perm.type != null ? String(perm.type) : '2';
+
+      if (Array.isArray(perm.specify_user_ids)) model.specifyIds = perm.specify_user_ids.join(',');
+      else if (Array.isArray(perm.specify_role_ids)) model.specifyIds = perm.specify_role_ids.join(',');
+      else model.specifyIds = '';
+
+      model.unsupportTips = action.unsupport_tips != null ? String(action.unsupport_tips) : '';
+      model.enter = action.enter === true;
+      model.reply = action.reply === true;
+      model.atBotList = action.at_bot_show_channel_list === true;
+      model.clickLimit = action.click_limit != null ? String(action.click_limit) : '';
+      model.anchor = action.anchor != null ? String(action.anchor) : '0';
+
+      if (action.modal && typeof action.modal === 'object') {
+        model.useModal = true;
+        if (action.modal.content != null) model.modalContent = String(action.modal.content);
+        if (action.modal.confirm_text != null) model.modalConfirm = String(action.modal.confirm_text);
+        if (action.modal.cancel_text != null) model.modalCancel = String(action.modal.cancel_text);
+      } else {
+        model.useModal = false;
+      }
+
+      const tpl = action.subscribe_data?.template_ids?.[0];
+      if (tpl && typeof tpl === 'object') {
+        if (tpl.template_id != null) {
+          model.templateIdType = 'template_id';
+          model.templateId = String(tpl.template_id);
+        } else if (tpl.custom_template_id != null) {
+          model.templateIdType = 'custom_template_id';
+          model.templateId = String(tpl.custom_template_id);
+        }
+      }
+
+      if (btn.group_id != null) model.groupId = String(btn.group_id);
+      return model;
+    }
+
+    // ---- 客户端 protobuf 数字字段结构 → 通用按钮 JSON ----
+    // 字段号映射(据客户端解析实测):
+    // button: 1=id, 2=render_data, 3=action, 4=group_id
+    // render_data: 1=label, 2=visited_label, 3=style
+    // action: 1=type, 2=permission, 3=click_limit, 4=unsupport_tips, 5=data,
+    //         6=at_bot_show_channel_list, 7=reply, 8=enter, 9=anchor, 10=subscribe_data, 12=modal
+    //         (群聊环境不支持 enter, field 8 会被平台丢弃; reply/field 7 群聊私聊均保留)
+    // permission: 1=type, 2=specify_role_ids[], 3=specify_user_ids
+    // modal: 1=content, 2=confirm_text, 3=cancel_text
+    // subscribe_data: 1=template_ids[0] {1=template_id, 2=custom_template_id}
+    // keyboard: 1=rows(单行时为对象,多行为数组), 3=style {1=font_size, 如 "small"(小按钮)}
+    function asArray(v) {
+      if (v == null) return [];
+      return Array.isArray(v) ? v : [v];
+    }
+
+    function isClientProtoStructure(parsed) {
+      if (!parsed || typeof parsed !== 'object') return false;
+      const root = parsed['53'] ? parsed['53']['2'] : (parsed['2'] && parsed['1'] ? parsed : null) || parsed;
+      // 探测: 存在 keyboard(1).rows(1)[].buttons(1)[] 且按钮用数字字段
+      const kb = parsed['53']?.['2']?.['1'] || parsed['2']?.['1'] || parsed['1'];
+      const rowsRaw = kb?.['1'];
+      if (!rowsRaw) return false;
+      const firstRow = asArray(rowsRaw)[0];
+      const firstBtn = asArray(firstRow?.['1'])[0];
+      return !!(firstBtn && (firstBtn['1'] !== undefined || firstBtn['2'] !== undefined || firstBtn['3'] !== undefined));
+    }
+
+    function clientProtoToGeneric(parsed) {
+      const kb = parsed['53']?.['2']?.['1'] || parsed['2']?.['1'] || parsed['1'];
+      const rowsRaw = asArray(kb?.['1']);
+      const rows = rowsRaw.map(row => {
+        const buttons = asArray(row['1']).map(b => {
+          const rd = b['2'] || {};
+          const ac = b['3'] || {};
+          const perm = ac['2'] || {};
+
+          const render_data = { label: rd['1'] != null ? rd['1'] : '' };
+          if (rd['2'] != null) render_data.visited_label = rd['2'];
+          render_data.style = rd['3'] != null ? rd['3'] : 0;
+
+          const permission = { type: perm['1'] != null ? perm['1'] : 0 };
+          if (Array.isArray(perm['2'])) permission.specify_role_ids = perm['2'].slice();
+          else if (perm['2'] != null) permission.specify_role_ids = [perm['2']];
+          if (perm['3'] != null) {
+            // 3 可能是逗号/字符串或数组
+            permission.specify_user_ids = Array.isArray(perm['3']) ? perm['3'].slice() : String(perm['3']).split(',').filter(s => s !== '');
+          }
+
+          const action = {
+            type: ac['1'] != null ? ac['1'] : 0,
+            permission
+          };
+          if (ac['5'] != null) action.data = ac['5'];
+          if (ac['4'] != null) action.unsupport_tips = ac['4'];
+          if (ac['7']) action.reply = true;
+          if (ac['8']) action.enter = true;
+          if (ac['6']) action.at_bot_show_channel_list = true;
+          if (ac['3'] != null) action.click_limit = ac['3'];
+          if (ac['9'] != null) action.anchor = ac['9'];
+          if (ac['12'] && typeof ac['12'] === 'object') {
+            action.modal = {
+              content: ac['12']['1'] != null ? ac['12']['1'] : '',
+              confirm_text: ac['12']['2'] != null ? ac['12']['2'] : '',
+              cancel_text: ac['12']['3'] != null ? ac['12']['3'] : ''
+            };
+          }
+          if (ac['10'] && typeof ac['10'] === 'object') {
+            const tplRaw = ac['10']['1'];
+            const tpl = {};
+            if (tplRaw && typeof tplRaw === 'object') {
+              if (tplRaw['1'] != null && tplRaw['1'] !== '') tpl.template_id = String(tplRaw['1']);
+              else if (tplRaw['2'] != null && tplRaw['2'] !== '') tpl.custom_template_id = String(tplRaw['2']);
+              else tpl.template_id = String(tplRaw['1'] != null ? tplRaw['1'] : '');
+            } else {
+              tpl.template_id = String(tplRaw != null ? tplRaw : '');
+            }
+            action.subscribe_data = { template_ids: [tpl] };
+          }
+
+          const result = { id: b['1'] != null ? String(b['1']) : '', render_data, action };
+          if (b['4'] != null) result.group_id = String(b['4']);
+          return result;
+        });
+        return { buttons };
+      });
+      const out = { rows };
+      // keyboard.3 = style, style.1 = font_size (如 "small")
+      const kbStyle = kb?.['3'];
+      if (kbStyle && kbStyle['1'] != null) out.style = { font_size: String(kbStyle['1']) };
+      return out;
+    }
+
+    function extractRowsFromJson(parsed) {
+      if (!parsed || typeof parsed !== 'object') return null;
+      if (isClientProtoStructure(parsed)) {
+        const converted = clientProtoToGeneric(parsed);
+        return converted.rows;
+      }
+      if (Array.isArray(parsed.rows)) return parsed.rows;
+      if (parsed.content && Array.isArray(parsed.content.rows)) return parsed.content.rows;
+      if (parsed.keyboard && Array.isArray(parsed.keyboard.rows)) return parsed.keyboard.rows;
+      if (parsed.keyboard?.content && Array.isArray(parsed.keyboard.content.rows)) return parsed.keyboard.content.rows;
+      if (Array.isArray(parsed)) return parsed;
+      return null;
+    }
+
+    function extractSmallFont(parsed) {
+      if (isClientProtoStructure(parsed)) {
+        const kb = parsed['53']?.['2']?.['1'] || parsed['2']?.['1'] || parsed['1'];
+        return kb?.['3']?.['1'] === 'small';
+      }
+      const style = parsed?.style || parsed?.content?.style || parsed?.keyboard?.style || parsed?.keyboard?.content?.style;
+      return style?.font_size === 'small';
+    }
+
+    // 客户端结构 keyboard.2 = appid (机器人 appid, 如 102722993)
+    function extractAppid(parsed) {
+      if (!isClientProtoStructure(parsed)) return null;
+      const kb = parsed['53']?.['2']?.['1'] || parsed['2']?.['1'] || parsed['1'];
+      const appid = kb?.['2'];
+      return appid != null ? String(appid) : null;
+    }
+
+    function importFromJson(text) {
+      const importMsg = document.getElementById('importMsg');
+      const raw = String(text || '').trim();
+      if (!raw) {
+        setStatus(importMsg, 'error', '请输入 JSON');
+        return;
+      }
+      let parsed;
+      try {
+        parsed = JSON.parse(raw);
+      } catch (e) {
+        setStatus(importMsg, 'error', 'JSON 解析失败: ' + e.message);
+        return;
+      }
+      const rawRows = extractRowsFromJson(parsed);
+      if (!rawRows || !rawRows.length) {
+        setStatus(importMsg, 'error', '未找到 rows，请检查结构');
+        return;
+      }
+      const newRows = [];
+      let btnCount = 0;
+      for (const row of rawRows) {
+        const buttonsRaw = Array.isArray(row?.buttons) ? row.buttons : [];
+        const buttons = buttonsRaw.map(b => { btnCount++; return actionButtonToModel(b); });
+        if (buttons.length) newRows.push({ buttons });
+      }
+      if (!newRows.length) {
+        setStatus(importMsg, 'error', '没有可导入的按钮');
+        return;
+      }
+      rows = newRows;
+      const smallFontSelect = document.getElementById('globalSmallFont');
+      if (smallFontSelect) smallFontSelect.value = extractSmallFont(parsed) ? 'small' : 'no';
+      previewState = { clickedButtons: {}, selectedGroups: {} };
+      renderRows();
+      const hasSpecifyId = newRows.some(r => r.buttons.some(b => (b.permissionType === '0' || b.permissionType === '3') && b.specifyIds.trim()));
+      const appid = extractAppid(parsed);
+      importMsg.className = 'import-result';
+      importMsg.innerHTML =
+        `<span class="status-msg is-success">${icon('ic-check')}<span>已导入 ${newRows.length} 行 / ${btnCount} 个按钮` +
+        (appid ? ` <span style="color:var(--text-secondary);font-weight:400;">appid: ${appid}</span>` : '') +
+        `</span></span>` +
+        (hasSpecifyId ? `<span class="import-warn">${icon('ic-warn')}<span>检测到指定ID：这里是 openid（机器人事件中获取），不是真实QQ号，禁止填真实QQ号</span></span>` : '');
+    }
+
+    const container = document.getElementById('rowsContainer');
+    
+    function renderRows() {
+      let html = '';
+      rows.forEach((row, rowIdx) => {
+        html += `<div class="button-row-editor">
+          <div class="row-header">
+            <strong>第 ${rowIdx+1} 行</strong>
+            <button class="btn small-btn" data-add-btn-top="${rowIdx}"><svg class="ic"><use href="#ic-plus"></use></svg> 添加按钮</button>
+            <button class="btn small-btn btn-secondary" data-del-row="${rowIdx}"><svg class="ic"><use href="#ic-trash"></use></svg> 删除行</button>
+          </div>`;
+        row.buttons.forEach((btn, btnIdx) => {
+          html += renderButtonEditor(btn, rowIdx, btnIdx);
+        });
+        html += `<div class="row-footer">
+          <button class="btn small-btn btn-secondary" data-add-btn-bottom="${rowIdx}"><svg class="ic"><use href="#ic-plus"></use></svg> 在此行添加按钮</button>
+        </div>`;
+        html += `</div>`;
+      });
+      container.innerHTML = html;
+      attachEvents();
+      renderPreview();
+    }
+
+    function renderButtonEditor(btn, rowIdx, btnIdx) {
+      const isLinkType = btn.actionType === '0' || btn.actionType === '3';
+      const modalSupported = ['0','1','2','3','4','5'].includes(btn.actionType);
+      const isSubscribe = btn.actionType === '4';
+      const showSpecifyIds = btn.permissionType === '0' || btn.permissionType === '3';
+      const groupId = (btn.groupId || '').trim();
+      const showGroupWarn = groupId && (btn.actionType !== '1' || !btn.data.trim());
+      return `<div class="button-item" data-row="${rowIdx}" data-btn="${btnIdx}">
+        <div style="display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-bottom:10px;">
+          <div class="field-group"><label>按钮文字 *</label><input value="${btn.label}" placeholder="必填" style="width:130px;" data-field="label"></div>
+          <div class="field-group"><label>点击后文字</label><input value="${btn.visited_label}" placeholder="可选" style="width:130px;" data-field="visited_label"></div>
+          <div class="field-group"><label>样式</label><select data-field="style">${styleOptions(btn.style)}</select></div>
+          <div class="field-group"><label>动作类型</label><select data-field="actionType">${typeOptions(btn.actionType)}</select></div>
+          <div class="field-group"><label>指令/数据/链接</label><input value="${btn.data}" placeholder="${isLinkType ? (btn.actionType==='0'?'https://...':'mqqapi://...') : (isSubscribe ? '#指令(可选)' : '#指令')}" style="width:180px;" data-field="data">${isLinkType?'<span class="auto-prefix-note"><svg class="ic"><use href="#ic-bolt"></use></svg>自动前缀</span>':''}</div>
+          <button class="btn small-btn btn-secondary" data-del-btn="${rowIdx},${btnIdx}"><svg class="ic"><use href="#ic-trash"></use></svg> 删除</button>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; align-items:center; gap:10px;">
+          <div class="field-group"><label>权限</label><select data-field="permissionType">${permOptions(btn.permissionType)}</select></div>
+          <div class="field-group specify-ids-field" style="${showSpecifyIds ? '' : 'display:none;'}"><label>指定ID</label><input value="${btn.specifyIds}" placeholder="逗号分隔" style="width:130px;" data-field="specifyIds"><small style="color:#c77b1e; font-size:0.7rem; margin-top:2px;">填 openid（非真实QQ号）</small></div>
+          <div class="field-group" style="${modalSupported ? '' : 'display:none;'}"><label><input type="checkbox" data-field="useModal" ${btn.useModal?'checked':''}> 弹窗</label></div>
+          <span id="modalFields_${rowIdx}_${btnIdx}" style="${btn.useModal?'':'display:none;'}">
+            <input value="${btn.modalContent}" placeholder="内容" size="10" data-field="modalContent">
+            <input value="${btn.modalConfirm}" placeholder="确认" size="6" data-field="modalConfirm">
+            <input value="${btn.modalCancel}" placeholder="取消" size="6" data-field="modalCancel">
+          </span>
+          <div class="field-group subscribe-field" style="${isSubscribe ? '' : 'display:none;'}">
+            <label>模板ID类型</label>
+            <select data-field="templateIdType">${templateIdTypeOptions(btn.templateIdType)}</select>
+            <label>模板ID <span class="required-hint">*</span></label>
+            <input value="${btn.templateId}" placeholder="${btn.templateIdType === 'template_id' ? 'template_id' : 'custom_template_id'}" style="width:200px;" data-field="templateId">
+            <span class="hint-note">订阅必填，两种ID互斥只用其一</span>
+          </div>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-top:8px;">
+          <div class="field-group"><label>不支持提示</label><input value="${btn.unsupportTips}" placeholder="unsupport_tips" data-field="unsupportTips"></div>
+          <div class="field-group"><label><input type="checkbox" data-field="enter" ${btn.enter?'checked':''}> enter</label><label style="margin-left:8px;"><input type="checkbox" data-field="reply" ${btn.reply?'checked':''}> reply</label><label style="margin-left:8px;"><input type="checkbox" data-field="atBotList" ${btn.atBotList?'checked':''}> at_bot_show</label></div>
+          <div class="field-group"><label>点击限制</label><input value="${btn.clickLimit}" type="number" placeholder="可选" style="width:80px;" data-field="clickLimit"><span class="hint-note">相同 group_id 只可选一个</span></div>
+          <div class="field-group"><label>互斥组</label><input value="${btn.groupId || ''}" placeholder="group_id，可空" style="width:130px;" data-field="groupId"><span class="hint-note">回调按钮最佳效果</span><span class="warn-note group-warn" style="${showGroupWarn ? '' : 'display:none;'}">建议使用回调按钮并填写回调数据</span></div>
+          <div class="field-group"><label>anchor</label><select data-field="anchor">${anchorOptions(btn.anchor)}</select></div>
+        </div>
+      </div>`;
+    }
+
+    function styleOptions(val) {
+      const opts = {0:'0 灰框',1:'1 蓝框',2:'2 智能体(推荐回复)',3:'3 红框',4:'4 蓝底白字'};
+      return Object.entries(opts).map(([v,t])=>`<option value="${v}" ${v==val?'selected':''}>${t}</option>`).join('');
+    }
+    function typeOptions(val) {
+      const opts = {0:'0 链接',1:'1 回调',2:'2 指令',3:'3 native',4:'4 订阅',5:'5 自定义'};
+      return Object.entries(opts).map(([v,t])=>`<option value="${v}" ${v==val?'selected':''}>${t}</option>`).join('');
+    }
+    function permOptions(val) {
+      const opts = {0:'0 指定用户',1:'1 管理员',2:'2 所有人',3:'3 身份组'};
+      return Object.entries(opts).map(([v,t])=>`<option value="${v}" ${v==val?'selected':''}>${t}</option>`).join('');
+    }
+    function anchorOptions(val) {
+      return `<option value="0" ${val==='0'?'selected':''}>0 无</option><option value="1" ${val==='1'?'selected':''}>1 选图器</option>`;
+    }
+    function templateIdTypeOptions(val) {
+      const opts = {custom_template_id:'custom_template_id', template_id:'template_id'};
+      return Object.entries(opts).map(([v,t])=>`<option value="${v}" ${v===val?'selected':''}>${t}</option>`).join('');
+    }
+
+    function attachEvents() {
+      document.querySelectorAll('[data-field]').forEach(el => {
+        el.addEventListener('input', function(e) {
+          const rowIdx = this.closest('[data-row]')?.dataset.row;
+          const btnIdx = this.closest('[data-row]')?.dataset.btn;
+          if (rowIdx === undefined) return;
+          const field = this.dataset.field;
+          const value = this.type === 'checkbox' ? this.checked : this.value;
+          const btn = rows[rowIdx].buttons[btnIdx];
+          btn[field] = value;
+          
+          if (field === 'useModal') {
+            const span = document.getElementById(`modalFields_${rowIdx}_${btnIdx}`);
+            if (span) span.style.display = value ? 'inline' : 'none';
+          }
+          if (field === 'actionType') {
+            const itemDiv = this.closest('.button-item');
+            // 订阅模板ID控制
+            const subscribeGroup = itemDiv.querySelector('.subscribe-field');
+            if (subscribeGroup) {
+              subscribeGroup.style.display = value === '4' ? 'flex' : 'none';
+            }
+            const dataInput = itemDiv.querySelector('[data-field="data"]');
+            const modalCheckGroup = itemDiv.querySelector('[data-field="useModal"]')?.closest('.field-group');
+            const modalSupported = ['0','1','2','3','4','5'].includes(value);
+            if (modalCheckGroup) {
+              modalCheckGroup.style.display = modalSupported ? 'flex' : 'none';
+              if (!modalSupported) {
+                const cb = itemDiv.querySelector('[data-field="useModal"]');
+                if (cb) { cb.checked = false; btn.useModal = false; }
+                const span = document.getElementById(`modalFields_${rowIdx}_${btnIdx}`);
+                if (span) span.style.display = 'none';
+              }
+            }
+            if (value === '0' || value === '3') {
+              let cur = btn.data;
+              if (value==='0' && cur && !cur.match(/^https?:\/\//)) cur = 'https://' + cur.replace(/^https?:\/\//, '');
+              if (value==='3' && cur && !cur.startsWith('mqqapi://')) cur = 'mqqapi://' + cur.replace(/^mqqapi:\/\//, '');
+              if (cur !== btn.data) { btn.data = cur; dataInput.value = cur; }
+            }
+          }
+          if (field === 'data') {
+            let val = value;
+            if (btn.actionType==='0' && val && !val.match(/^https?:\/\//)) val = 'https://' + val.replace(/^https?:\/\//, '');
+            if (btn.actionType==='3' && val && !val.startsWith('mqqapi://')) val = 'mqqapi://' + val.replace(/^mqqapi:\/\//, '');
+            if (val !== value) { btn.data = val; this.value = val; }
+          }
+          if (field === 'permissionType') {
+            const specifyIdsField = this.closest('.button-item')?.querySelector('.specify-ids-field');
+            if (specifyIdsField) specifyIdsField.style.display = value === '0' || value === '3' ? 'flex' : 'none';
+          }
+          if (field === 'templateIdType') {
+            const templateInput = this.closest('.subscribe-field')?.querySelector('[data-field="templateId"]');
+            if (templateInput) templateInput.placeholder = value === 'template_id' ? 'template_id' : 'custom_template_id';
+          }
+          updateGroupWarn(this.closest('.button-item'), btn);
+          renderPreview();
+        });
+      });
+      
+      document.querySelectorAll('[data-add-btn-top]').forEach(btn => {
+        btn.addEventListener('click', e => {
+          const rowIdx = e.currentTarget.dataset.addBtnTop;
+          rows[rowIdx].buttons.push(createDefaultButton());
+          renderRows();
+        });
+      });
+      document.querySelectorAll('[data-add-btn-bottom]').forEach(btn => {
+        btn.addEventListener('click', e => {
+          const rowIdx = e.currentTarget.dataset.addBtnBottom;
+          rows[rowIdx].buttons.push(createDefaultButton());
+          renderRows();
+        });
+      });
+      document.querySelectorAll('[data-del-row]').forEach(btn => {
+        btn.addEventListener('click', e => {
+          const idx = e.currentTarget.dataset.delRow;
+          rows.splice(idx, 1);
+          if (rows.length===0) rows.push({ buttons: [createDefaultButton()] });
+          renderRows();
+        });
+      });
+      document.querySelectorAll('[data-del-btn]').forEach(btn => {
+        btn.addEventListener('click', e => {
+          const [r,c] = e.currentTarget.dataset.delBtn.split(',').map(Number);
+          rows[r].buttons.splice(c,1);
+          if (rows[r].buttons.length===0) rows.splice(r,1);
+          if (rows.length===0) rows.push({ buttons: [createDefaultButton()] });
+          renderRows();
+        });
+      });
+    }
+
+    document.getElementById('addRowBtn').addEventListener('click', ()=>{
+      rows.push({ buttons: [createDefaultButton()] });
+      renderRows();
+    });
+
+    document.getElementById('importBtn').addEventListener('click', ()=>{
+      importFromJson(document.getElementById('importInput').value);
+    });
+
+    document.getElementById('importCurrentBtn').addEventListener('click', ()=>{
+      const rowsData = buildContentRows();
+      document.getElementById('importInput').value = JSON.stringify({ rows: rowsData }, null, 2);
+      const importMsg = document.getElementById('importMsg');
+      setStatus(importMsg, 'success', '已载入当前按钮 JSON，可编辑后重新导入');
+    });
+
+    function validateButtons() {
+      for (let r of rows) {
+        for (let btn of r.buttons) {
+          if (!btn.label || btn.label.trim() === '') {
+            setError('存在按钮文字为空');
+            return false;
+          }
+          if (btn.actionType === '4' && (!btn.templateId || btn.templateId.trim() === '')) {
+            setError('订阅按钮必须填写模板ID');
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+
+    function updateGroupWarn(itemDiv, btn) {
+      const warn = itemDiv?.querySelector('.group-warn');
+      if (!warn) return;
+      const hasGroupId = !!(btn.groupId || '').trim();
+      const hasCallbackData = !!(btn.data || '').trim();
+      warn.style.display = hasGroupId && (btn.actionType !== '1' || !hasCallbackData) ? 'inline' : 'none';
+    }
+
+    function normalizeStyle(style) {
+      return ['0','1','2','3','4'].includes(String(style)) ? String(style) : '0';
+    }
+
+    function getActionText(type) {
+      const map = {0:'链接',1:'回调',2:'指令',3:'native',4:'订阅',5:'自定义'};
+      return map[type] || '未知';
+    }
+
+    function getPermissionText(type) {
+      const map = {0:'指定用户',1:'管理员',2:'所有人',3:'身份组'};
+      return map[type] || '未知';
+    }
+
+    function escapeHtml(text) {
+      return String(text ?? '').replace(/[&<>"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+    }
+
+    function cleanupPreviewState() {
+      const ids = new Set();
+      const idToGroup = {};
+      rows.forEach(row => row.buttons.forEach(btn => {
+        ids.add(btn.id);
+        idToGroup[btn.id] = (btn.groupId || '').trim();
+      }));
+      Object.keys(previewState.clickedButtons).forEach(id => {
+        if (!ids.has(id)) delete previewState.clickedButtons[id];
+      });
+      Object.keys(previewState.selectedGroups).forEach(groupId => {
+        const selectedId = previewState.selectedGroups[groupId];
+        if (!ids.has(selectedId) || idToGroup[selectedId] !== groupId) delete previewState.selectedGroups[groupId];
+      });
+    }
+
+    function appendChatMessage(text, type) {
+      const div = document.createElement('div');
+      div.className = `chat-message${type ? ' ' + type : ''}`;
+      div.textContent = text;
+      chatBody.appendChild(div);
+      chatBody.scrollTop = chatBody.scrollHeight;
+      return div;
+    }
+
+    function setChatInput(text) {
+      chatInputPreview.textContent = text || '点击按钮后，这里会模拟输入或发送结果';
+    }
+
+    function showUnsupportedTip(btn) {
+      appendChatMessage(btn.unsupportTips || '请升级QQ版本', 'status');
+    }
+
+    function markPreviewClicked(btn) {
+      previewState.clickedButtons[btn.id] = true;
+      const groupId = (btn.groupId || '').trim();
+      if (groupId) previewState.selectedGroups[groupId] = btn.id;
+      renderPreview();
+    }
+
+    function handlePreviewAction(btn) {
+      const actionType = parseInt(btn.actionType, 10);
+      if (![0,1,2,3,4,5].includes(actionType)) {
+        showUnsupportedTip(btn);
+        markPreviewClicked(btn);
+        return;
+      }
+
+      if (actionType === 0 || actionType === 3) {
+        appendChatMessage(`正在前往链接：${btn.data || '未填写链接'}`, 'status');
+        markPreviewClicked(btn);
+        return;
+      }
+
+      if (actionType === 1) {
+        const loading = appendChatMessage('', 'status');
+        loading.innerHTML = '<span class="chat-spinner"></span>操作处理中...';
+        window.setTimeout(() => {
+          loading.classList.add('success');
+          loading.textContent = '操作成功';
+        }, 1000);
+        markPreviewClicked(btn);
+        return;
+      }
+
+      if (actionType === 4) {
+        pendingSubscribeButton = btn;
+        subscribeModalText.textContent = `是否订阅「${btn.label || '未命名'}」消息？`;
+        subscribeModal.classList.add('show');
+        markPreviewClicked(btn);
+        return;
+      }
+
+      if (actionType === 2 || actionType === 5) {
+        const command = btn.data || btn.label || '';
+        if (btn.enter) {
+          appendChatMessage(command || btn.label || '已发送', 'user');
+          appendChatMessage('发送成功', 'success');
+          setChatInput('点击按钮后，这里会模拟输入或发送结果');
+        } else {
+          setChatInput(command || btn.label || '');
+        }
+        markPreviewClicked(btn);
+        return;
+      }
+
+      showUnsupportedTip(btn);
+      markPreviewClicked(btn);
+    }
+
+    function renderPreview() {
+      cleanupPreviewState();
+      const useSmallFont = document.getElementById('globalSmallFont').value === 'small';
+      previewContainer.classList.toggle('small-font', useSmallFont);
+      if (!rows.length || rows.every(row => !row.buttons.length)) {
+        previewContainer.innerHTML = '<div class="markdown-preview">操作提示</div><div class="preview-empty">暂无按钮</div>';
+        return;
+      }
+      let html = '<div class="markdown-preview">操作提示</div>';
+      rows.forEach((row, rowIdx) => {
+        if (!row.buttons.length) return;
+        html += '<div class="preview-row">';
+        row.buttons.forEach((btn, btnIdx) => {
+          const groupId = (btn.groupId || '').trim();
+          const selectedId = groupId ? previewState.selectedGroups[groupId] : '';
+          const isDisabled = groupId && selectedId && selectedId !== btn.id;
+          const isVisited = !!previewState.clickedButtons[btn.id];
+          const label = isVisited ? (btn.visited_label || btn.label) : btn.label;
+          const title = [
+            `按钮ID: ${btn.id}`,
+            `点击后: ${btn.visited_label || btn.label || '未设置'}`,
+            `动作类型: ${getActionText(btn.actionType)}`,
+            `权限: ${getPermissionText(btn.permissionType)}`,
+            `click_limit: ${btn.clickLimit || '未设置'}`,
+            `group_id: ${groupId || '未设置'}`
+          ].join('\n');
+          const icon = normalizeStyle(btn.style) === '2' ? '<svg class="preview-ai-icon" aria-hidden="true"><use href="#message_ai_24_icon"></use></svg>' : '';
+          html += `<button type="button" class="preview-button style-${normalizeStyle(btn.style)}${isVisited ? ' visited' : ''}${isDisabled ? ' disabled' : ''}" data-preview-btn="${rowIdx},${btnIdx}" title="${escapeHtml(title)}">${icon}<span>${escapeHtml(label || '未命名')}</span></button>`;
+        });
+        html += '</div>';
+      });
+      previewContainer.innerHTML = html || '<div class="markdown-preview">操作提示</div><div class="preview-empty">暂无按钮</div>';
+      previewContainer.querySelectorAll('[data-preview-btn]').forEach(el => {
+        el.addEventListener('click', e => {
+          const [rowIdx, btnIdx] = e.currentTarget.dataset.previewBtn.split(',').map(Number);
+          const btn = rows[rowIdx]?.buttons[btnIdx];
+          if (!btn) return;
+          handlePreviewAction(btn);
+        });
+      });
+    }
+
+    function buildContentRows() {
+      return rows.map(row => ({
+        buttons: row.buttons.map(btn => {
+          const perm = { type: parseInt(btn.permissionType) };
+          if (perm.type === 0 || perm.type === 3) {
+            const ids = btn.specifyIds.split(',').map(s=>s.trim()).filter(s=>s);
+            if (perm.type === 0) perm.specify_user_ids = ids;
+            else perm.specify_role_ids = ids;
+          }
+          const action = { type: parseInt(btn.actionType), permission: perm };
+          let finalData = btn.data || '';
+          if (btn.actionType === '0' && finalData && !finalData.match(/^https?:\/\//)) finalData = 'https://' + finalData.replace(/^https?:\/\//, '');
+          if (btn.actionType === '3' && finalData && !finalData.startsWith('mqqapi://')) finalData = 'mqqapi://' + finalData.replace(/^mqqapi:\/\//, '');
+          if (btn.actionType !== '4') action.data = finalData;
+          else if (finalData) action.data = finalData;
+          
+          if (btn.unsupportTips) action.unsupport_tips = btn.unsupportTips;
+          if (btn.enter) action.enter = true;
+          if (btn.reply) action.reply = true;
+          if (btn.atBotList) action.at_bot_show_channel_list = true;
+          if (btn.clickLimit && !isNaN(btn.clickLimit)) action.click_limit = parseInt(btn.clickLimit);
+          if (btn.anchor === '1') action.anchor = 1;
+          if (btn.useModal && ['0','1','2','3','4','5'].includes(btn.actionType)) {
+            action.modal = { content: btn.modalContent, confirm_text: btn.modalConfirm, cancel_text: btn.modalCancel };
+          }
+          if (btn.actionType === '4') {
+            const templateIdKey = btn.templateIdType === 'template_id' ? 'template_id' : 'custom_template_id';
+            action.subscribe_data = { template_ids: [{ [templateIdKey]: btn.templateId }] };
+          }
+          const result = {
+            id: btn.id,
+            render_data: { label: btn.label.trim(), visited_label: btn.visited_label || btn.label, style: parseInt(normalizeStyle(btn.style)) },
+            action
+          };
+          if (btn.groupId && btn.groupId.trim()) result.group_id = btn.groupId.trim();
+          return result;
+        })
+      }));
+    }
+
+    function generateOutput() {
+      if (!validateButtons()) {
+        return null;
+      }
+      const rowsData = buildContentRows();
+      const content = { rows: rowsData };
+      const useSmallFont = document.getElementById('globalSmallFont').value === 'small';
+      if (useSmallFont) content.style = { font_size: 'small' };
+      
+      const format = document.getElementById('outputFormat').value;
+      if (format === 'segment') {
+        const full = { type: 'keyboard', content };
+        return `const md = segment.markdown('操作提示');\nconst keyboard = segment.raw(${JSON.stringify(full, null, 2)});\n\nthis.e.reply([md, keyboard]);`;
+      } else {
+        return JSON.stringify({ rows: rowsData, ...(useSmallFont && { style: { font_size: 'small' } }) }, null, 2);
+      }
+    }
+
+    document.getElementById('genBtn').addEventListener('click', ()=>{
+      const code = generateOutput();
+      if (code) {
+        document.getElementById('outputCode').textContent = code;
+        setError('');
+        showSuccessTip('生成成功！可点击复制');
+      } else {
+        document.getElementById('outputCode').textContent = '// 请先填写所有必填项（按钮文字、订阅模板ID）';
+        successMsg.classList.remove('show');
+      }
+    });
+
+    function fallbackCopy(text) {
+      const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select();
+      try {
+        document.execCommand('copy');
+        setError('');
+        showSuccessTip('已复制');
+      } catch(e) {
+        setError('复制失败');
+        successMsg.classList.remove('show');
+      }
+      document.body.removeChild(ta);
+    }
+    document.getElementById('copyBtn').addEventListener('click', ()=>{
+      const text = document.getElementById('outputCode').textContent;
+      if (!text || text.startsWith('//')) {
+        setError('请先生成');
+        successMsg.classList.remove('show');
+        return;
+      }
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(()=>{
+          setError('');
+          showSuccessTip('已复制');
+        }).catch(()=>fallbackCopy(text));
+      } else fallbackCopy(text);
+    });
+
+    document.getElementById('resetPreviewBtn').addEventListener('click', ()=>{
+      previewState = { clickedButtons: {}, selectedGroups: {} };
+      chatBody.innerHTML = '';
+      setChatInput('点击按钮后，这里会模拟输入或发送结果');
+      renderPreview();
+    });
+
+    document.getElementById('globalSmallFont').addEventListener('change', renderPreview);
+
+    document.getElementById('chatSendPreviewBtn').addEventListener('click', ()=>{
+      const text = chatInputPreview.textContent.trim();
+      if (!text || text === '点击按钮后，这里会模拟输入或发送结果') {
+        appendChatMessage('请输入内容后发送', 'status');
+        return;
+      }
+      appendChatMessage(text, 'user');
+      appendChatMessage('发送成功', 'success');
+      setChatInput('点击按钮后，这里会模拟输入或发送结果');
+    });
+
+    document.getElementById('cancelSubscribeBtn').addEventListener('click', ()=>{
+      subscribeModal.classList.remove('show');
+      pendingSubscribeButton = null;
+      appendChatMessage('已取消订阅', 'status');
+    });
+
+    document.getElementById('confirmSubscribeBtn').addEventListener('click', ()=>{
+      const label = pendingSubscribeButton?.label || '该按钮';
+      subscribeModal.classList.remove('show');
+      pendingSubscribeButton = null;
+      appendChatMessage(`已订阅「${label}」`, 'success');
+    });
+
+    initDefaultRows();
+    document.getElementById('genBtn').click();
+  })();
+</script>
+</body>
+</html>
